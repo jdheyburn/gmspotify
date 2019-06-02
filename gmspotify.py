@@ -3,6 +3,7 @@ import spotify
 import argparse
 import pprint
 import re
+import utils
 
 albums = {}
 
@@ -68,22 +69,21 @@ def _match_tracks(gm_tracks, s_tracks):
             s_track_id = s_track['id']
             if s_track_id in s_tracks_added:
                 continue
-            gm_artists = [_strip_str(gm_track['artist'])]
+            gm_artists = [utils.strip_str(gm_track['artist'])]
             
             if len(s_track['artists']) > 1:
                 print('s_track {} has more than one artist! {}'.format(gm_track['title'], [x['name'] for x in s_track['artists']]))
-                gm_title, ft_artists = _strip_ft_artist_from_title(gm_track['title'])
+                gm_title, ft_artists = utils.strip_ft_artist_from_title(gm_track['title'])
                 if not ft_artists:
                     print('ft_artist was empty unexpectedly')
                 else:
+                    gm_title = utils.strip_str(gm_track['title'])
 
-            gm_title = _strip_str(gm_track['title'])
-
-            s_title = _strip_str(s_track['name'])
-            s_artist = _strip_str(s_track['artists'][0]['name'])
+            s_title = utils.strip_str(s_track['name'])
+            s_artist = utils.strip_str(s_track['artists'][0]['name'])
             if gm_title == s_title: 
                 if gm_artist == s_artist:
-                print('Found match for {} - {}'.format(gm_title, gm_artist))
+                    print('Found match for {} - {}'.format(gm_title, gm_artist))
                 gm_track['spotifyId'] = s_track_id
                 s_tracks_added.append(s_track_id)
     no_matches = [x for x in gm_tracks if 'spotifyId' not in x]
