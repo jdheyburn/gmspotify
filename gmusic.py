@@ -1,5 +1,35 @@
 from gmusicapi import Mobileclient
 import config
+from typing import MutableMapping
+
+
+class GMusicTrack:
+    title: str
+    artist: str
+    rating: str
+
+    def __init__(self, title: str, artist: str, rating: str = '') -> None:
+        self.title = title
+        self.artist = artist
+        self.rating = rating
+
+
+class GMusicAlbum:
+    id: str
+    title: str
+    album_artist: str
+    year: str
+    tracks: MutableMapping[int, GMusicTrack] = {}
+
+    def __init__(self, id: str, title: str, album_artist: str, year: str='') -> None:
+        self.id = id
+        self.title = title
+        self.album_artist = album_artist
+        self.year = year
+
+    def add_track(self, trackNum: int, track: GMusicTrack) -> None:
+        self.tracks[trackNum] = track
+
 
 def filter_thumbs_down_tracks(lib):
     return [track for track in lib if 'rating' in track and track['rating'] == '1']
@@ -36,4 +66,3 @@ def gen_report(lib):
     print('Thumbs down: {}'.format(len(td_tracks)))
     print('Uploaded: {}'.format(len(uploaded_tracks)))
     print('Added: {}'.format(len(added_tracks)))
-

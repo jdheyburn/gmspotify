@@ -2,21 +2,9 @@ import gmusic
 import spotify
 import argparse
 import pprint
-from typing import List
 import re
 import utils
 
-
-class Album:
-    id = None
-    title = ''
-    albumArtist = ''
-    tracks = []
-
-    def __init__(self, id, title, albumArtist):
-        self.id = id
-        self.title = title
-        self.albumArtist
 
 albums = {}
 
