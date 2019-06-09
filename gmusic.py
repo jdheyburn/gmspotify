@@ -1,6 +1,13 @@
-from gmusicapi import Mobileclient
-import config
 from typing import MutableMapping
+
+from gmusicapi import Mobileclient
+
+import config
+
+
+class DuplicateTrackError(Exception):
+    """Raised when the album already has a track defined for a disc"""
+    pass
 
 
 class GMusicTrack:
@@ -13,22 +20,48 @@ class GMusicTrack:
         self.artist = artist
         self.rating = rating
 
+    def __eq__(self, other):
+        if not isinstance(other, GMusicTrack):
+            return NotImplemented
+        return self.title == other.title and self.artist == other.artist
+
+    def __hash__(self):
+        return hash((self.title, self.artist))
+
 
 class GMusicAlbum:
     id: str
     title: str
     album_artist: str
     year: str
-    tracks: MutableMapping[int, GMusicTrack] = {}
+    # DiscNumber -> Track Number -> Track
+    tracks: MutableMapping[int, MutableMapping[int, GMusicTrack]]
 
-    def __init__(self, id: str, title: str, album_artist: str, year: str='') -> None:
+    def __init__(self, id: str, title: str, album_artist: str, year: str = '',
+                 tracks: MutableMapping[int, MutableMapping[int, GMusicTrack]] = {}) -> None:
         self.id = id
         self.title = title
         self.album_artist = album_artist
         self.year = year
+        self.tracks = {}
 
-    def add_track(self, trackNum: int, track: GMusicTrack) -> None:
-        self.tracks[trackNum] = track
+    def __track_exists(self, discNum: int, trackNum: int) -> bool:
+        return discNum in self.tracks and trackNum in self.tracks[discNum]
+
+    def add_track(self, discNum: int, trackNum: int, track: GMusicTrack) -> None:
+        if self.__track_exists(discNum, trackNum):
+            raise DuplicateTrackError
+        if discNum not in self.tracks:
+            self.tracks[discNum] = {}
+        self.tracks[discNum][trackNum] = track
+
+    def __eq__(self, other):
+        if not isinstance(other, GMusicAlbum):
+            return NotImplemented
+        return self.id == other.id
+
+    def __hash__(self):
+        return hash(self.id)
 
 
 def filter_thumbs_down_tracks(lib):
