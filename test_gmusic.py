@@ -1,13 +1,18 @@
 import unittest
 
-from gmusic import GMusicTrack, GMusicAlbum, DuplicateTrackError
+from gmusic import GMusicTrack, GMusicAlbum, DuplicateTrackError, parse_lib
 from typing import List
+import json
 
 id = 'Bi5vplouym4ugzrtyyx7c7jh5fa'
 album_artist = 'Various Artists'
 title = 'Mono No Aware'
 track = GMusicTrack('Limerence', 'Yves Tumor')
 track2 = GMusicTrack('Zhao Hua', 'HVAD & Pan Daijing')
+
+gm_response_fname = 'gm_tracks_dump_small.json'
+with open(gm_response_fname, 'r', encoding='utf-8') as f:
+    gm_response = json.load(f)
 
 
 class TestClasses(unittest.TestCase):
@@ -98,6 +103,54 @@ class TestClasses(unittest.TestCase):
         album1 = GMusicAlbum('123', 'testtitle', 'testalbumartist')
         album2 = GMusicAlbum('123', 'testtitle', 'testalbumartist')
         self.assertEqual(album1, album2)
+
+
+class TestOther(unittest.TestCase):
+    # TODO way of testing this properly using equality?
+    def test_parse_gm_lib(self):
+        """
+        Should correctly parse list of tracks retrieved from Google Music to correct map
+        """
+        
+        expected_album1_tracks = {
+            1: {
+                3: GMusicTrack('Elegant Design', 'Pond'),
+                4: GMusicTrack('Sorry I Was Under The Sky', 'Pond')
+            }
+        }
+        expected_album1 = GMusicAlbum(
+            'Byqh4iypmkshcvqpvscncu62faa',
+            'Beard, Wives, Denim',
+            'Pond',
+            '2012',
+            expected_album1_tracks
+        )
+
+        expected_album2_tracks = {
+            2: {
+                10: GMusicTrack('B.E. (Unmixed Version)', 'Calvin Keys'),
+                11: GMusicTrack('Time and Space (Unmixed Version)', 'Rudolph Johnson'),
+                12: GMusicTrack('Blue Bossa (Unmixed Version)', 'Walter Bishop Jr.')
+            }
+        }
+        expected_album2 = GMusicAlbum(
+            'Bzcy7ul6glqnhuthtp7dnmrudbi',
+            'Black Jazz Signature',
+            'Theo Parrish',
+            '',
+            expected_album2_tracks
+        )
+
+        albums: MutableMapping[str, GMusicAlbum] = {
+            'Bzcy7ul6glqnhuthtp7dnmrudbi': expected_album2,
+            'Byqh4iypmkshcvqpvscncu62faa': expected_album1
+            
+        }
+
+        actual = parse_lib(gm_response)
+        self.maxDiff = None
+        self.addTypeEqualityFunc
+        self.assertEqual(actual, albums)
 
 
 if __name__ == '__main__':

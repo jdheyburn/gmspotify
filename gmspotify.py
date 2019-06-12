@@ -19,40 +19,8 @@ ma_gm = [
 # s_title:  MMXXX - feat. Moor Mother
 
 
-def parse_lib(lib: List) -> MutableMapping[str, gmusic.GMusicAlbum]:
-    # TODO do we need to define the type here?
-    albums: MutableMapping[str, gmusic.GMusicAlbum] = {}
-    for track in lib:
-        albumId = track['albumId']
-        if albumId not in albums: 
-            albums[albumId] = gmusic.GMusicAlbum(
-                id,
-                track['album'],
-                track['albumArtist'],
-                track['year'] if 'year' in track else '' # TODO better way to handle this?
-            )
-        album = albums[albumId]
-    
-        try:
-            album.add_track(
-                track['discNumber'], 
-                track['trackNumber'], gmusic.GMusicTrack(
-                    track['title'],
-                    track['artist'],
-                    track['rating'] if 'rating' in track else ''
-                )
-            )
-        except gmusic.DuplicateTrackError as e:
-            # TODO just raise it for now for testing, implement a failsafe later
-            raise e
-    return albums
 
-
-
-
-
-
-def _get_all_artists_from_tracks(gm_track, s_track) -> List[str]:
+def _get_all_artists_from_tracks(gm_track: gmusic.GMusicTrack, s_track) -> List[str]:
     gm_artist = gm_track['artist']
     s_artists = s_track['artists'] # TODO this isn't right
 

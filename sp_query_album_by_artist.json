@@ -1,0 +1,136 @@
+{
+    "albums": {
+        "href": "https://api.spotify.com/v1/search?query=album%3ABelief+System+artist%3ASpecial+Request&type=album&offset=0&limit=10",
+        "items": [
+            {
+                "album_type": "album",
+                "artists": [
+                    {
+                        "external_urls": {
+                            "spotify": "https://open.spotify.com/artist/59xdAObFYuaKO2phzzz07H"
+                        },
+                        "href": "https://api.spotify.com/v1/artists/59xdAObFYuaKO2phzzz07H",
+                        "id": "59xdAObFYuaKO2phzzz07H",
+                        "name": "Special Request",
+                        "type": "artist",
+                        "uri": "spotify:artist:59xdAObFYuaKO2phzzz07H"
+                    }
+                ],
+                "available_markets": [
+                    "AD",
+                    "AE",
+                    "AR",
+                    "AT",
+                    "AU",
+                    "BE",
+                    "BG",
+                    "BH",
+                    "BO",
+                    "BR",
+                    "CA",
+                    "CH",
+                    "CL",
+                    "CO",
+                    "CR",
+                    "CY",
+                    "CZ",
+                    "DE",
+                    "DK",
+                    "DO",
+                    "DZ",
+                    "EC",
+                    "EE",
+                    "EG",
+                    "ES",
+                    "FI",
+                    "FR",
+                    "GB",
+                    "GR",
+                    "GT",
+                    "HK",
+                    "HN",
+                    "HU",
+                    "ID",
+                    "IE",
+                    "IL",
+                    "IN",
+                    "IS",
+                    "IT",
+                    "JO",
+                    "JP",
+                    "KW",
+                    "LB",
+                    "LI",
+                    "LT",
+                    "LU",
+                    "LV",
+                    "MA",
+                    "MC",
+                    "MT",
+                    "MX",
+                    "MY",
+                    "NI",
+                    "NL",
+                    "NO",
+                    "NZ",
+                    "OM",
+                    "PA",
+                    "PE",
+                    "PH",
+                    "PL",
+                    "PS",
+                    "PT",
+                    "PY",
+                    "QA",
+                    "RO",
+                    "SA",
+                    "SE",
+                    "SG",
+                    "SK",
+                    "SV",
+                    "TH",
+                    "TN",
+                    "TR",
+                    "TW",
+                    "US",
+                    "UY",
+                    "VN",
+                    "ZA"
+                ],
+                "external_urls": {
+                    "spotify": "https://open.spotify.com/album/4lhJWoHwt3ccnMN5G8GkFo"
+                },
+                "href": "https://api.spotify.com/v1/albums/4lhJWoHwt3ccnMN5G8GkFo",
+                "id": "4lhJWoHwt3ccnMN5G8GkFo",
+                "images": [
+                    {
+                        "height": 640,
+                        "url": "https://i.scdn.co/image/18e1d7b1876353f928da86d986d7c64ee7f7ae37",
+                        "width": 640
+                    },
+                    {
+                        "height": 300,
+                        "url": "https://i.scdn.co/image/e8c330d4d72246ff6580d86ac99ae8d610eb0312",
+                        "width": 300
+                    },
+                    {
+                        "height": 64,
+                        "url": "https://i.scdn.co/image/55bd05052b8cedfb8c0c4fd955dcc810863f4fc0",
+                        "width": 64
+                    }
+                ],
+                "name": "Belief System",
+                "release_date": "2017-10-13",
+                "release_date_precision": "day",
+                "total_tracks": 23,
+                "type": "album",
+                "uri": "spotify:album:4lhJWoHwt3ccnMN5G8GkFo"
+            }
+        ],
+        "limit": 10,
+        "next": None,
+        "offset": 0,
+        "previous": None,
+        "total": 1
+    }
+}

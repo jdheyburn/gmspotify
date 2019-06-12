@@ -6,6 +6,19 @@ from spotipy.oauth2 import SpotifyClientCredentials
 _SP_REDIRECT_URL = 'http://localhost:8888/callback/'
 _SP_SCOPE = 'user-library-modify'
 
+# TODO Complete these classes for Spotify response 
+class SpArtistItem():
+    id: str
+    name: str
+    def __init__(self, **kwargs):
+        self.id = kwargs['id']
+        self.name = kwargs['name']
+
+class SpAlbumItem():
+    album_type: str
+    artists
+
+
 
 def get_sp_api():
     username = config.get_username()
@@ -38,6 +51,10 @@ def query_album_by_artist(sp_api, album_title, album_artist):
 
 def query_albums_by_title(sp_api, album_title):
     query = 'album:{}'.format(album_title)
+    return sp_api.search(q=query, type='album')
+
+def query_albums_by_title_year(sp_api, album_title, year):
+    query = 'album:{} year:{}'.format(album_title, year)
     return sp_api.search(q=query, type='album')
 
 

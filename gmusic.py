@@ -64,6 +64,35 @@ class GMusicAlbum:
         return hash(self.id)
 
 
+def parse_lib(lib: List) -> MutableMapping[str, GMusicAlbum]:
+    # TODO do we need to define the type here?
+    albums: MutableMapping[str, GMusicAlbum] = {}
+    for track in lib:
+        albumId = track['albumId']
+        if albumId not in albums: 
+            albums[albumId] = GMusicAlbum(
+                id,
+                track['album'],
+                track['albumArtist'],
+                track['year'] if 'year' in track else '' # TODO better way to handle this?
+            )
+        album = albums[albumId]
+    
+        try:
+            album.add_track(
+                track['discNumber'], 
+                track['trackNumber'], GMusicTrack(
+                    track['title'],
+                    track['artist'],
+                    track['rating'] if 'rating' in track else ''
+                )
+            )
+        except DuplicateTrackError as e:
+            # TODO just raise it for now for testing, implement a failsafe later
+            raise e
+    return albums
+
+
 def filter_thumbs_down_tracks(lib):
     return [track for track in lib if 'rating' in track and track['rating'] == '1']
 
