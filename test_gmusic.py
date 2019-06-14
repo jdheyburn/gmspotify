@@ -149,7 +149,6 @@ class TestOther(unittest.TestCase):
 
         actual = parse_lib(gm_response)
         self.maxDiff = None
-        self.addTypeEqualityFunc
         self.assertEqual(actual, albums)
 
 

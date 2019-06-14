@@ -1,4 +1,4 @@
-from typing import MutableMapping
+from typing import MutableMapping, List
 
 from gmusicapi import Mobileclient
 
@@ -43,7 +43,7 @@ class GMusicAlbum:
         self.title = title
         self.album_artist = album_artist
         self.year = year
-        self.tracks = {}
+        self.tracks = tracks
 
     def __track_exists(self, discNum: int, trackNum: int) -> bool:
         return discNum in self.tracks and trackNum in self.tracks[discNum]
@@ -56,9 +56,9 @@ class GMusicAlbum:
         self.tracks[discNum][trackNum] = track
 
     def __eq__(self, other):
-        if not isinstance(other, GMusicAlbum):
+        if type(other) is not type(self):
             return NotImplemented
-        return self.id == other.id
+        return self.__dict__ == other.__dict__
 
     def __hash__(self):
         return hash(self.id)
