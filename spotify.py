@@ -10,25 +10,113 @@ import config
 _SP_REDIRECT_URL = 'http://localhost:8888/callback/'
 _SP_SCOPE = 'user-library-modify'
 
-class SpAlbumApiResp():
-    def __init__(self, obj: dict):
-        self.__dict__.update(munch.munchify(obj))
+
+class SpArtist():
+    id: str
+    name: str
+
+    def __init__(self, obj: munch.Munch) -> None:
+        self.id = obj.id
+        self.name = obj.name
+
     def __eq__(self, other):
-        if type(other) is not type(self):
+        if type(other) != type(self):
             return NotImplemented
         return self.__dict__ == other.__dict__
 
-# Wrapper around items since munch is still a dict
-class SpAlbumsQueryApiResp():
-    album_items: List
-    total: int
 
-    def __init__(self, obj: dict):
-        if 'albums' not in obj:
-            raise AttributeError()
+class SpAlbumTrack():
+    artists: List[SpArtist]
+    disc_number: int
+    id: str
+    title: str
+    track_number: int
+
+    def __init__(self, obj: munch.Munch) -> None:
+        self.artists = [SpArtist(artist) for artist in obj.artists]
+        self.disc_number = obj.disc_number
+        self.id = obj.id
+        self.title = obj.name
+        self.track_number = obj.track_number
+
+    def __eq__(self, other):
+        if type(other) != type(self):
+            return NotImplemented
+        return self.__dict__ == other.__dict__
+
+
+class SpAlbum():
+    id: str
+    title: str
+    artists: List[SpArtist]
+    tracks: List[SpAlbumTrack]
+    label: str
+    album_type: str
+    release_date: str  # TODO convert to date obj?
+    total_tracks: int
+
+    def __init__(self, obj: dict) -> None:
         munched_obj = munch.munchify(obj)
-        self.total = munched_obj.albums.total
-        self.album_items = munch.munchify(munched_obj.albums['items'])
+        self.id = munched_obj.id
+        self.title = munched_obj.name
+        self.artists = [SpArtist(artist) for artist in munched_obj.artists]
+        self.tracks = [SpAlbumTrack(track) for track in munched_obj.tracks['items']]
+        self.label = munched_obj.label
+        self.album_type = munched_obj.album_type
+        self.release_date = munched_obj.release_date
+        self.total_tracks = munched_obj.total_tracks
+
+    def __eq__(self, other):
+        if type(other) != type(self):
+            return NotImplemented
+        return self.__dict__ == other.__dict__
+
+
+class SpQueryAlbum():
+    album_type: str
+    artists: List[SpArtist]
+    id: str
+    title: str
+    release_date: str
+    total_tracks: int
+
+    def __init__(self, obj: munch.Munch) -> None:
+        self.album_type = obj.album_type
+        self.artists = [SpArtist(artist) for artist in obj.artists]
+        self.id = obj.id
+        self.title = obj.name
+        self.release_date = obj.release_date
+        self.total_tracks = obj.total_tracks
+
+    def __eq__(self, other):
+        if type(other) != type(self):
+            return NotImplemented
+        return self.__dict__ == other.__dict__
+
+
+class SpQueryAlbumsResp():
+    items: List[SpQueryAlbum]
+
+    def __init__(self, obj: munch.Munch) -> None:
+        self.items = [SpQueryAlbum(munch.Munch(album))
+                      for album in obj['items']]
+
+    def __eq__(self, other):
+        if type(other) != type(self):
+            return NotImplemented
+        return self.__dict__ == other.__dict__
+
+
+class SpQueryRespWrapper():
+    albums: SpQueryAlbumsResp
+
+    def __init__(self, obj: dict) -> None:
+        self.albums = SpQueryAlbumsResp(obj['albums'])
+
+    def __eq__(self, other):
+        if type(other) != type(self):
+            return NotImplemented
+        return self.__dict__ == other.__dict__
 
 
 class SpQueryBuilder():
@@ -36,7 +124,7 @@ class SpQueryBuilder():
     artist: str
     year: str
 
-    def __init__(self, album: str='', album_artist: str='', year: str=''):
+    def __init__(self, album: str = '', album_artist: str = '', year: str = ''):
         self.album = album
         self.artist = album_artist
         self.year = year
@@ -59,11 +147,11 @@ class SpApi():
         )
         self.client = spotipy.Spotify(client_credentials_manager=ccm)
 
-    def get_album_by_id(self, id: str) -> SpAlbumApiResp:
-        return SpAlbumApiResp(self.client.album(id))
+    def get_album_by_id(self, id: str):
+        return SpAlbum(self.client.album(id))
 
-    def execute_query(self, q: str) -> SpAlbumsQueryApiResp:
-        return SpAlbumsQueryApiResp(self.client.search(q=q, type='album'))
+    def execute_query(self, q: str):
+        return SpQueryRespWrapper(self.client.search(q=q, type='album'))
 
 
 def get_sp_api():

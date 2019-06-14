@@ -1,11 +1,12 @@
 import re
+from typing import Tuple
 
-ARTIST_MATCH_REGEX = '[A-Za-z0-9\ ]+'
-FEAT_REGEX = '\ \(?(feat\.?\ |ft\.?\ |featuring\ )([^)]+)\)?'
+ARTIST_MATCH_REGEX = r'[A-Za-z0-9\ ]+'
+FEAT_REGEX = r'\-?\ \(?(feat\.?\ |ft\.?\ |featuring\ )([^)]+)\)?'
 COMPILED_FEAT_REGEX = re.compile(FEAT_REGEX)
 
 
-def strip_ft_artist_from_title(title: str) -> (str, str):
+def strip_ft_artist_from_title(title: str) -> Tuple[str, str]:
     """
     Takes in a track title and removes the featuring artist (if any) from it
     If there was a featuring artist then this is returned too

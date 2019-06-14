@@ -21,7 +21,7 @@ class TestUtils(unittest.TestCase):
         title = 'Defeat'
         expected = (title, None)
         actual = utils.strip_ft_artist_from_title(title)
-        self.assertTupleEqual(actual, expected)
+        self.assertEqual(actual, expected)
 
     def test_strip_ft_artist_one_ft_brackets(self):
         """
@@ -31,7 +31,7 @@ class TestUtils(unittest.TestCase):
         expected = (
             'Jim Jones At Botany Bay (From "The Hateful Eight" Soundtrack)', 'Kurt Russell')
         actual = utils.strip_ft_artist_from_title(title)
-        self.assertTupleEqual(actual, expected)
+        self.assertEqual(actual, expected)
 
     def test_strip_ft_artist_one_ft_no_brackets(self):
         """
@@ -40,7 +40,7 @@ class TestUtils(unittest.TestCase):
         title = 'Tha Lyot Remix feat. DJ Roy'
         expected = ('Tha Lyot Remix', 'DJ Roy')
         actual = utils.strip_ft_artist_from_title(title)
-        self.assertTupleEqual(actual, expected)
+        self.assertEqual(actual, expected)
 
     def test_strip_ft_artist_one_ft_brackets_more_content(self):
         """
@@ -50,7 +50,28 @@ class TestUtils(unittest.TestCase):
         title = 'WYWD (feat. Kelela) (Remix)'
         expected = ('WYWD (Remix)', 'Kelela')
         actual = utils.strip_ft_artist_from_title(title)
-        self.assertTupleEqual(actual, expected)
+        self.assertEqual(actual, expected)
+    
+    def test_strip_ft_artist_one_ft_no_dot(self):
+        """
+        Given featuring one Artist in brackets with no dot
+        Should return stripped title and that one artist
+        """
+        title = 'MMXXX (ft Moor Mother)'
+        expected = ('MMXXX', 'Moor Mother')
+        actual = utils.strip_ft_artist_from_title(title)
+        self.assertEqual(actual, expected)
+    
+    def test_strip_ft_artist_one_ft_hyphen(self):
+        """
+        Given featuring one Artist seperated by a hyphen instead of brackets
+        Should return stripped title and that one artist
+        """
+        title = 'Stretch Deep - feat. Eve Essex'
+        expected = ('Stretch Deep', 'Eve Essex')
+        actual = utils.strip_ft_artist_from_title(title)
+        self.assertEqual(actual, expected)
+        
 
 
 if __name__ == '__main__':

@@ -1,0 +1,136 @@
+{
+    "albums": {
+        "href": "https://api.spotify.com/v1/search?query=album%3AGrafts+artist%3AKara-Lis+Coverdale&type=album&offset=0&limit=10",
+        "items": [
+            {
+                "album_type": "single",
+                "artists": [
+                    {
+                        "external_urls": {
+                            "spotify": "https://open.spotify.com/artist/5pHUdo5THDtmE9yu3iC2hA"
+                        },
+                        "href": "https://api.spotify.com/v1/artists/5pHUdo5THDtmE9yu3iC2hA",
+                        "id": "5pHUdo5THDtmE9yu3iC2hA",
+                        "name": "Kara-Lis Coverdale",
+                        "type": "artist",
+                        "uri": "spotify:artist:5pHUdo5THDtmE9yu3iC2hA"
+                    }
+                ],
+                "available_markets": [
+                    "AD",
+                    "AE",
+                    "AR",
+                    "AT",
+                    "AU",
+                    "BE",
+                    "BG",
+                    "BH",
+                    "BO",
+                    "BR",
+                    "CA",
+                    "CH",
+                    "CL",
+                    "CO",
+                    "CR",
+                    "CY",
+                    "CZ",
+                    "DE",
+                    "DK",
+                    "DO",
+                    "DZ",
+                    "EC",
+                    "EE",
+                    "EG",
+                    "ES",
+                    "FI",
+                    "FR",
+                    "GB",
+                    "GR",
+                    "GT",
+                    "HK",
+                    "HN",
+                    "HU",
+                    "ID",
+                    "IE",
+                    "IL",
+                    "IN",
+                    "IS",
+                    "IT",
+                    "JO",
+                    "JP",
+                    "KW",
+                    "LB",
+                    "LI",
+                    "LT",
+                    "LU",
+                    "LV",
+                    "MA",
+                    "MC",
+                    "MT",
+                    "MX",
+                    "MY",
+                    "NI",
+                    "NL",
+                    "NO",
+                    "NZ",
+                    "OM",
+                    "PA",
+                    "PE",
+                    "PH",
+                    "PL",
+                    "PS",
+                    "PT",
+                    "PY",
+                    "QA",
+                    "RO",
+                    "SA",
+                    "SE",
+                    "SG",
+                    "SK",
+                    "SV",
+                    "TH",
+                    "TN",
+                    "TR",
+                    "TW",
+                    "US",
+                    "UY",
+                    "VN",
+                    "ZA"
+                ],
+                "external_urls": {
+                    "spotify": "https://open.spotify.com/album/6hT28oOwJbnRX9qvxbXbTw"
+                },
+                "href": "https://api.spotify.com/v1/albums/6hT28oOwJbnRX9qvxbXbTw",
+                "id": "6hT28oOwJbnRX9qvxbXbTw",
+                "images": [
+                    {
+                        "height": 640,
+                        "url": "https://i.scdn.co/image/e462332bfd17049e0ed66ee405550eb0a450b036",
+                        "width": 640
+                    },
+                    {
+                        "height": 300,
+                        "url": "https://i.scdn.co/image/501f4363400b5844f9378052efdf691c688c933c",
+                        "width": 300
+                    },
+                    {
+                        "height": 64,
+                        "url": "https://i.scdn.co/image/10cbb9e4bbfc9057c08a2628e9b6c81d73b9d51f",
+                        "width": 64
+                    }
+                ],
+                "name": "Grafts",
+                "release_date": "2017-05-05",
+                "release_date_precision": "day",
+                "total_tracks": 1,
+                "type": "album",
+                "uri": "spotify:album:6hT28oOwJbnRX9qvxbXbTw"
+            }
+        ],
+        "limit": 10,
+        "next": null,
+        "offset": 0,
+        "previous": null,
+        "total": 1
+    }
+}

@@ -20,6 +20,9 @@ class GMusicTrack:
         self.artist = artist
         self.rating = rating
 
+    def set_spotify_id(self, spotify_id: str) -> None:
+        self.spotify_id = spotify_id
+
     def __eq__(self, other):
         if not isinstance(other, GMusicTrack):
             return NotImplemented
@@ -34,7 +37,7 @@ class GMusicAlbum:
     title: str
     album_artist: str
     year: str
-    # DiscNumber -> Track Number -> Track
+    # disc_number -> Track Number -> Track
     tracks: MutableMapping[int, MutableMapping[int, GMusicTrack]]
 
     def __init__(self, id: str, title: str, album_artist: str, year: str = '',
@@ -45,15 +48,18 @@ class GMusicAlbum:
         self.year = year
         self.tracks = tracks
 
-    def __track_exists(self, discNum: int, trackNum: int) -> bool:
-        return discNum in self.tracks and trackNum in self.tracks[discNum]
+    def set_spotify_id(self, spotify_id: str) -> None:
+        self.spotify_id = spotify_id
 
-    def add_track(self, discNum: int, trackNum: int, track: GMusicTrack) -> None:
-        if self.__track_exists(discNum, trackNum):
+    def __track_exists(self, disc_num: int, track_num: int) -> bool:
+        return disc_num in self.tracks and track_num in self.tracks[disc_num]
+
+    def add_track(self, disc_num: int, track_num: int, track: GMusicTrack) -> None:
+        if self.__track_exists(disc_num, track_num):
             raise DuplicateTrackError
-        if discNum not in self.tracks:
-            self.tracks[discNum] = {}
-        self.tracks[discNum][trackNum] = track
+        if disc_num not in self.tracks:
+            self.tracks[disc_num] = {}
+        self.tracks[disc_num][track_num] = track
 
     def __eq__(self, other):
         if type(other) is not type(self):
@@ -68,19 +74,20 @@ def parse_lib(lib: List) -> MutableMapping[str, GMusicAlbum]:
     # TODO do we need to define the type here?
     albums: MutableMapping[str, GMusicAlbum] = {}
     for track in lib:
-        albumId = track['albumId']
-        if albumId not in albums: 
-            albums[albumId] = GMusicAlbum(
+        album_id = track['albumId']
+        if album_id not in albums:
+            albums[album_id] = GMusicAlbum(
                 id,
                 track['album'],
                 track['albumArtist'],
-                track['year'] if 'year' in track else '' # TODO better way to handle this?
+                # TODO better way to handle this?
+                track['year'] if 'year' in track else ''
             )
-        album = albums[albumId]
-    
+        album = albums[album_id]
+
         try:
             album.add_track(
-                track['discNumber'], 
+                track['disc_number'],
                 track['trackNumber'], GMusicTrack(
                     track['title'],
                     track['artist'],
