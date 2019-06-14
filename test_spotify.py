@@ -41,17 +41,22 @@ class TestQueryBuilderClass(unittest.TestCase):
         self.assertEqual(actual, expected)
 
 class TestSpApiClass(unittest.TestCase):
+
+    def get_mock_sp_api(self) -> spotify.SpApi:
+        mock_sp_api = spotify.SpApi('id', 'secret')
+        mock_sp_api.client = MagicMock(album=MagicMock(return_value=get_album_by_id_response))
+        return mock_sp_api
+
+
     def test_get_album_by_id(self):
         """
         Given a request is made to Spotify API for Album ID
         Should verify that the API is hit
         """
-        api = spotify.SpApi('id', 'secret')
+        mock_sp_api = self.get_mock_sp_api()
         expected = spotify.SpAlbum(munch.munchify(get_album_by_id_response))
-        api.client = MagicMock(album=MagicMock(return_value=get_album_by_id_response))
-        actual = api.get_album_by_id('album_id')
-
-        api.client.album.assert_called_once_with('album_id')
+        actual = mock_sp_api.get_album_by_id('album_id')
+        mock_sp_api.client.album.assert_called_once_with('album_id')
         self.assertEqual(actual, expected)
 
 

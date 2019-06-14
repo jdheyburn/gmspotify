@@ -95,10 +95,12 @@ class SpQueryAlbum():
 
 
 class SpQueryAlbumsResp():
+    total: int
     items: List[SpQueryAlbum]
 
     def __init__(self, obj: munch.Munch) -> None:
-        self.items = [SpQueryAlbum(munch.Munch(album))
+        self.total = obj['total']
+        self.items = [SpQueryAlbum(munch.munchify(album))
                       for album in obj['items']]
 
     def __eq__(self, other):
@@ -147,10 +149,18 @@ class SpApi():
         )
         self.client = spotipy.Spotify(client_credentials_manager=ccm)
 
-    def get_album_by_id(self, id: str):
+    def get_album_by_id(self, id: str) -> SpAlbum:
         return SpAlbum(self.client.album(id))
 
-    def execute_query(self, q: str):
+    def query_album_by_title(self, title: str) -> SpQueryRespWrapper:
+        q = SpQueryBuilder(album=title)
+        return self.execute_query(q)
+
+    def query_album_by_title_and_artist(self, title: str, artist: str) -> SpQueryRespWrapper:
+        q = SpQueryBuilder(album=title, album_artist=artist)
+        return self.execute_query(q)
+
+    def execute_query(self, q: str) -> SpQueryRespWrapper:
         return SpQueryRespWrapper(self.client.search(q=q, type='album'))
 
 

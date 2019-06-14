@@ -39,6 +39,8 @@ class GMusicAlbum:
     year: str
     # disc_number -> Track Number -> Track
     tracks: MutableMapping[int, MutableMapping[int, GMusicTrack]]
+    spotify_id: str
+    whole_album_added: bool
 
     def __init__(self, id: str, title: str, album_artist: str, year: str = '',
                  tracks: MutableMapping[int, MutableMapping[int, GMusicTrack]] = {}) -> None:
