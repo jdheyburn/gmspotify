@@ -62,7 +62,8 @@ def titles_match(gm_title: str, s_title: str) -> bool:
 #     pass
 
 
-def _match_tracks(gm_tracks, s_tracks):
+def _match_tracks(gm_tracks: MutableMapping[int, MutableMapping[int, gmusic.GMusicTrack]],
+                  s_tracks: List[spotify.SpAlbumTrack]):
     s_tracks_added = []
     for gm_track in gm_tracks:
         for s_track in s_tracks:
@@ -98,7 +99,7 @@ def _match_tracks(gm_tracks, s_tracks):
 
 def _process_album(sp_api, gm_album: gmusic.GMusicAlbum, sp_album: spotify.SpQueryAlbum):
     gm_album.set_spotify_id(sp_album.id)
-    
+
     if len(gm_album.total_tracks()) == sp_album.total_tracks:
         print('    Complete album added')
         gm_album.set_whole_album_added(True)
@@ -107,14 +108,16 @@ def _process_album(sp_api, gm_album: gmusic.GMusicAlbum, sp_album: spotify.SpQue
     # Usually if the user has the entire album added, we won't perform a
     # per track lookup. However during early stages I want more real test
     # cases for the matching logic
-    s_album_results = sp_api.get_album_by_id(gm_album.spotify_id)
+    sp_album = sp_api.get_album_by_id(gm_album.spotify_id)
     # TODO handle empty results
     # TODO handle # tracks > return limit
-    _match_tracks(album['tracks'], s_album_results['tracks']['items'])
+    _match_tracks(gm_album.tracks, sp_album.tracks)
 
 
+# TODO tidy up this function
 def query_gm_album_in_spotify(sp_api: spotify.SpApi, gm_album: gmusic.GMusicAlbum):
-    print(f'Processing {gm_album.title} - {gm_album.album_artist}')
+    q_text = f'{gm_album.title} - {gm_album.album_artist} - {gm_album.year}'
+    print(f'Processing {q_text}')
 
     q = spotify.SpQueryBuilder(
         album=gm_album.title,
@@ -126,16 +129,27 @@ def query_gm_album_in_spotify(sp_api: spotify.SpApi, gm_album: gmusic.GMusicAlbu
 
     if not sp_album_query_resp.albums.total:
         print(
-            f'No results found for: {gm_album.title} - {gm_album.album_artist}')
-        print(f'Now querying by album_title {gm_album.title}')
+            f'No results found querying by year for: {q_text}')
+        q_text = f'{gm_album.title} - {gm_album.album_artist}'
+        print(f'Now querying by {q_text}')
+        q = spotify.SpQueryBuilder(
+            album=gm_album.title,
+            album_artist=gm_album.album_artist
+        ).build()
 
+        sp_album_query_resp = sp_api.execute_query(q=q)
+
+    if not sp_album_query_resp.albums.total:
+        print(
+            f'No results found querying by: {q_text}')
+        print(f'Now querying by album title: {gm_album.title}')
         sp_album_query_resp = sp_api.query_album_by_title(title=gm_album.title)
 
     if sp_album_query_resp.albums.total == 1:
         print('    Found exactly one match')
 
-        spotify_album = sp_album_query_resp.albums.items[0]
-        # _process_album(sp_api, gm_album, spotify_album)
+        sp_album = sp_album_query_resp.albums.items[0]
+        _process_album(sp_api, gm_album, sp_album)
     elif sp_album_query_resp.albums.total > 1:
         print(
             f'Could not accurately look up: {gm_album.title} - {gm_album.album_artist}')
