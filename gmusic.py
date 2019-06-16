@@ -48,10 +48,15 @@ class GMusicAlbum:
         self.title = title
         self.album_artist = album_artist
         self.year = year
-        self.tracks = tracks
+        self.tracks = dict(tracks)
+        self.spotify_id = ''
+        self.whole_album_added = False
 
     def set_spotify_id(self, spotify_id: str) -> None:
         self.spotify_id = spotify_id
+
+    def set_whole_album_added(self, whole_album_added: bool) -> None:
+        self.whole_album_added = whole_album_added
 
     def __track_exists(self, disc_num: int, track_num: int) -> bool:
         return disc_num in self.tracks and track_num in self.tracks[disc_num]
@@ -62,6 +67,9 @@ class GMusicAlbum:
         if disc_num not in self.tracks:
             self.tracks[disc_num] = {}
         self.tracks[disc_num][track_num] = track
+
+    def total_tracks(self) -> int:
+        return sum(len(disc_tracks) for disc_tracks in self.tracks.values())
 
     def __eq__(self, other):
         if type(other) is not type(self):

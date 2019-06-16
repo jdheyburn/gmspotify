@@ -96,18 +96,18 @@ def _match_tracks(gm_tracks, s_tracks):
         print('All tracks were matched successfully')
 
 
-def _process_album(sp_api, album, spotify_album):
-    album['spotifyId'] = spotify_album['id']
-    if len(album['tracks']) == spotify_album['total_tracks']:
+def _process_album(sp_api, gm_album: gmusic.GMusicAlbum, sp_album: spotify.SpQueryAlbum):
+    gm_album.set_spotify_id(sp_album.id)
+    
+    if len(gm_album.total_tracks()) == sp_album.total_tracks:
         print('    Complete album added')
-        album['wholeAlbum'] = True
+        gm_album.set_whole_album_added(True)
     else:
         print('    Album partially added to library')
-        album['wholeAlbum'] = False
     # Usually if the user has the entire album added, we won't perform a
     # per track lookup. However during early stages I want more real test
     # cases for the matching logic
-    s_album_results = spotify.get_album_by_id(sp_api, album['spotifyId'])
+    s_album_results = sp_api.get_album_by_id(gm_album.spotify_id)
     # TODO handle empty results
     # TODO handle # tracks > return limit
     _match_tracks(album['tracks'], s_album_results['tracks']['items'])

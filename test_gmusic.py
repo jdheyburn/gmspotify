@@ -104,52 +104,77 @@ class TestClasses(unittest.TestCase):
         album2 = GMusicAlbum('123', 'testtitle', 'testalbumartist')
         self.assertEqual(album1, album2)
 
+    def test_album_total_tracks_count_one_disc(self):
+        """
+        Given tracks have been added to tracks across 1 disc
+        Should return the correct number of tracks added
+        """
+        album = GMusicAlbum(id, title, album_artist)
+        album.add_track(1, 3, track)
+        album.add_track(1, 2, track)
+        expected = 2
+        actual = album.total_tracks()
+        self.assertEqual(actual, expected)
 
-class TestOther(unittest.TestCase):
+    def test_album_total_tracks_count_two_discs(self):
+        """
+        Given tracks have been added to tracks across 2 discs
+        Should return the correct number of tracks added
+        """
+        album = GMusicAlbum(id, title, album_artist)
+        album.add_track(1, 3, track)
+        album.add_track(1, 2, track)
+        album.add_track(2, 1, track)
+        expected = 3
+        actual = album.total_tracks()
+        self.assertEqual(actual, expected)
+
+
+# class TestOther(unittest.TestCase):
     # TODO way of testing this properly using equality?
-    def test_parse_gm_lib(self):
-        """
-        Should correctly parse list of tracks retrieved from Google Music to correct map
-        """
+    # def test_parse_gm_lib(self):
+    #     """
+    #     Should correctly parse list of tracks retrieved from Google Music to correct map
+    #     """
         
-        expected_album1_tracks = {
-            1: {
-                3: GMusicTrack('Elegant Design', 'Pond'),
-                4: GMusicTrack('Sorry I Was Under The Sky', 'Pond')
-            }
-        }
-        expected_album1 = GMusicAlbum(
-            'Byqh4iypmkshcvqpvscncu62faa',
-            'Beard, Wives, Denim',
-            'Pond',
-            '2012',
-            expected_album1_tracks
-        )
+    #     expected_album1_tracks = {
+    #         1: {
+    #             3: GMusicTrack('Elegant Design', 'Pond'),
+    #             4: GMusicTrack('Sorry I Was Under The Sky', 'Pond')
+    #         }
+    #     }
+    #     expected_album1 = GMusicAlbum(
+    #         'Byqh4iypmkshcvqpvscncu62faa',
+    #         'Beard, Wives, Denim',
+    #         'Pond',
+    #         '2012',
+    #         expected_album1_tracks
+    #     )
 
-        expected_album2_tracks = {
-            2: {
-                10: GMusicTrack('B.E. (Unmixed Version)', 'Calvin Keys'),
-                11: GMusicTrack('Time and Space (Unmixed Version)', 'Rudolph Johnson'),
-                12: GMusicTrack('Blue Bossa (Unmixed Version)', 'Walter Bishop Jr.')
-            }
-        }
-        expected_album2 = GMusicAlbum(
-            'Bzcy7ul6glqnhuthtp7dnmrudbi',
-            'Black Jazz Signature',
-            'Theo Parrish',
-            '',
-            expected_album2_tracks
-        )
+    #     expected_album2_tracks = {
+    #         2: {
+    #             10: GMusicTrack('B.E. (Unmixed Version)', 'Calvin Keys'),
+    #             11: GMusicTrack('Time and Space (Unmixed Version)', 'Rudolph Johnson'),
+    #             12: GMusicTrack('Blue Bossa (Unmixed Version)', 'Walter Bishop Jr.')
+    #         }
+    #     }
+    #     expected_album2 = GMusicAlbum(
+    #         'Bzcy7ul6glqnhuthtp7dnmrudbi',
+    #         'Black Jazz Signature',
+    #         'Theo Parrish',
+    #         '',
+    #         expected_album2_tracks
+    #     )
 
-        albums: MutableMapping[str, GMusicAlbum] = {
-            'Bzcy7ul6glqnhuthtp7dnmrudbi': expected_album2,
-            'Byqh4iypmkshcvqpvscncu62faa': expected_album1
+    #     albums: MutableMapping[str, GMusicAlbum] = {
+    #         'Bzcy7ul6glqnhuthtp7dnmrudbi': expected_album2,
+    #         'Byqh4iypmkshcvqpvscncu62faa': expected_album1
             
-        }
+    #     }
 
-        actual = parse_lib(gm_response)
-        self.maxDiff = None
-        self.assertEqual(actual, albums)
+    #     actual = parse_lib(gm_response)
+    #     self.maxDiff = None
+    #     self.assertEqual(actual, albums)
 
 
 if __name__ == '__main__':
