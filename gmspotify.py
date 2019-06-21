@@ -57,39 +57,82 @@ def titles_match(gm_title: str, s_title: str) -> bool:
     stripped_s_title, _ = utils.strip_ft_artist_from_title(s_title)
     return stripped_gm_title == stripped_s_title
 
-# TODO implement this - but need to create classes first
-# def match_tracks(gm_track: gmusic.GMusicTrack, s_track: spotify.STrack):
-#     pass
+
+def _tracks_match(gm_track: gmusic.GMusicTrack, sp_track: spotify.SpAlbumTrack):
+    # TODO implement - below is draft code
+    # gm_artists = [utils.strip_str(gm_track['artist'])]
+
+    # if len(s_track['artists']) > 1:
+    #     print('s_track {} has more than one artist! {}'.format(
+    #         gm_track['title'], [x['name'] for x in s_track['artists']]))
+    #     gm_title, ft_artists = utils.strip_ft_artist_from_title(
+    #         gm_track['title'])
+    #     if not ft_artists:
+    #         print('ft_artist was empty unexpectedly')
+    #     else:
+    #         gm_title = utils.strip_str(gm_track['title'])
+
+    # s_title = utils.strip_str(s_track['name'])
+    # s_artist = utils.strip_str(s_track['artists'][0]['name'])
+    # if gm_title == s_title:
+    #     if gm_artist == s_artist:
+    #         print('Found match for {} - {}'.format(gm_title, gm_artist))
+    #     gm_track['spotifyId'] = s_track_id
+    #     s_tracks_added.append(s_track_id)
+    return False
+
+
+def _option1(gm_track: gmusic.GMusicTrack, sp_tracks:List[spotify.SpAlbumTrack]):
+    # TODO implement
+    #   1. Look up sp_track by disc and track num and determine if they match
+    #       - if not then perform a lookup by other means
+    #       - how common is it that tracks are different across music services?
+    # Get the sp_track for disc and track num
+
+    corresponding_sp_track = [sp_track for sp_track in sp_tracks
+                            if sp_track.disc_num == gm_track.disc_num and \
+                                sp_track.track_num == gm_track.track_num]
+
+    if len(corresponding_sp_track) != 1:
+        # TODO handle when no track found 
+        # TODO handle multiple tracks found
+        sp_track = do_stuff_to_get_sp_track()
+    else:
+        sp_track = corresponding_sp_track[0]
+
+    if _tracks_match(gm_track, sp_track):
+
+
+    return False
+
+def _option2(gm_track: gmusic.GMusicTrack, sp_tracks:List[spotify.SpAlbumTrack]):
+    # TODO implement
+    #   2. Loop through all the sp_tracks and do a lookup on several factors
+    #       - track_num/disc_num/title/artists/etc
+    
+    return False
 
 
 def _match_tracks(gm_tracks: MutableMapping[int, MutableMapping[int, gmusic.GMusicTrack]],
-                  s_tracks: List[spotify.SpAlbumTrack]):
-    s_tracks_added = []
-    for gm_track in gm_tracks:
-        for s_track in s_tracks:
-            s_track_id = s_track['id']
-            if s_track_id in s_tracks_added:
-                continue
-            gm_artists = [utils.strip_str(gm_track['artist'])]
+                  sp_tracks: List[spotify.SpAlbumTrack]):
+    sp_tracks_added = []
+    gm_tracks_added = []
+    # TODO fix these ugly for loops
+    for disc_num, disc_tracks in gm_tracks.items():
+        for track_num, gm_track in disc_tracks.items():
+            # Two ways to tackle this:
+            #   1. Look up sp_track by disc and track num and determine if they match
+            #       - if not then perform a lookup by other means
+            #       - how common is it that tracks are different across music services?
+            #   2. Loop through all the sp_tracks and do a lookup on several factors
+            #       - track_num/disc_num/title/artists/etc
+            # TODO implement both and time them
+            sp_track = _option1(gm_track, sp_tracks)
+            sp_track = _option2(gm_track, sp_tracks)
+            gm_track.set_spotify_id(sp_track.id)
+            sp_tracks_added.append(sp_track.id)
 
-            if len(s_track['artists']) > 1:
-                print('s_track {} has more than one artist! {}'.format(
-                    gm_track['title'], [x['name'] for x in s_track['artists']]))
-                gm_title, ft_artists = utils.strip_ft_artist_from_title(
-                    gm_track['title'])
-                if not ft_artists:
-                    print('ft_artist was empty unexpectedly')
-                else:
-                    gm_title = utils.strip_str(gm_track['title'])
-
-            s_title = utils.strip_str(s_track['name'])
-            s_artist = utils.strip_str(s_track['artists'][0]['name'])
-            if gm_title == s_title:
-                if gm_artist == s_artist:
-                    print('Found match for {} - {}'.format(gm_title, gm_artist))
-                gm_track['spotifyId'] = s_track_id
-                s_tracks_added.append(s_track_id)
-    no_matches = [x for x in gm_tracks if 'spotifyId' not in x]
+    no_matches = [gm_track for gm_track in gm_tracks if not gm_track.spotify_id]
     if no_matches:
         print('Some tracks could not be matched in spotify:')
         pprint.pprint(no_matches)
@@ -108,7 +151,7 @@ def _process_album(sp_api, gm_album: gmusic.GMusicAlbum, sp_album: spotify.SpQue
     # Usually if the user has the entire album added, we won't perform a
     # per track lookup. However during early stages I want more real test
     # cases for the matching logic
-    sp_album = sp_api.get_album_by_id(gm_album.spotify_id)
+    sp_album = sp_api.get_album_by_id(sp_album.id)
     # TODO handle empty results
     # TODO handle # tracks > return limit
     _match_tracks(gm_album.tracks, sp_album.tracks)

@@ -14,6 +14,7 @@ class GMusicTrack:
     title: str
     artist: str
     rating: str
+    spotify_id: str
 
     def __init__(self, title: str, artist: str, rating: str = '') -> None:
         self.title = title
