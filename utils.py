@@ -16,7 +16,7 @@ def strip_ft_artist_from_title(title: str) -> Tuple[str, str]:
     """
     ft_regex_results = COMPILED_FEAT_REGEX.search(title)
     if not ft_regex_results:
-        return title, None
+        return title, ''
     feat_artist = ft_regex_results.group(2)
     stripped_title = re.sub(FEAT_REGEX, '', title)
     return stripped_title.strip(), feat_artist.strip()

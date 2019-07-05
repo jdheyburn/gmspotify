@@ -44,7 +44,8 @@ class GMusicAlbum:
     whole_album_added: bool
 
     def __init__(self, id: str, title: str, album_artist: str, year: str = '',
-                 tracks: MutableMapping[int, MutableMapping[int, GMusicTrack]] = {}) -> None:
+                 tracks: MutableMapping[
+                     int, MutableMapping[int, GMusicTrack]] = {}) -> None:
         self.id = id
         self.title = title
         self.album_artist = album_artist
@@ -62,7 +63,8 @@ class GMusicAlbum:
     def __track_exists(self, disc_num: int, track_num: int) -> bool:
         return disc_num in self.tracks and track_num in self.tracks[disc_num]
 
-    def add_track(self, disc_num: int, track_num: int, track: GMusicTrack) -> None:
+    def add_track(self, disc_num: int,
+                  track_num: int, track: GMusicTrack) -> None:
         if self.__track_exists(disc_num, track_num):
             raise DuplicateTrackError
         if disc_num not in self.tracks:
@@ -88,7 +90,7 @@ def parse_lib(lib: List) -> MutableMapping[str, GMusicAlbum]:
         album_id = track['albumId']
         if album_id not in albums:
             albums[album_id] = GMusicAlbum(
-                id,
+                album_id,
                 track['album'],
                 track['albumArtist'],
                 # TODO better way to handle this?
@@ -106,17 +108,19 @@ def parse_lib(lib: List) -> MutableMapping[str, GMusicAlbum]:
                 )
             )
         except DuplicateTrackError as e:
-            # TODO just raise it for now for testing, implement a failsafe later
+            # TODO just raise it for now for testing implement a failsafe later
             raise e
     return albums
 
 
 def filter_thumbs_down_tracks(lib):
-    return [track for track in lib if 'rating' in track and track['rating'] == '1']
+    return [track for track in lib
+            if 'rating' in track and track['rating'] == '1']
 
 
 def filter_thumbs_up_tracks(lib):
-    return [track for track in lib if 'rating' in track and track['rating'] == '5']
+    return [track for track in lib
+            if 'rating' in track and track['rating'] == '5']
 
 
 def get_gm_api():

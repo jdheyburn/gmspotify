@@ -60,7 +60,8 @@ class SpAlbum():
         self.id = munched_obj.id
         self.title = munched_obj.name
         self.artists = [SpArtist(artist) for artist in munched_obj.artists]
-        self.tracks = [SpAlbumTrack(track) for track in munched_obj.tracks['items']]
+        self.tracks = [SpAlbumTrack(track)
+                       for track in munched_obj.tracks['items']]
         self.label = munched_obj.label
         self.album_type = munched_obj.album_type
         self.release_date = munched_obj.release_date
@@ -126,7 +127,8 @@ class SpQueryBuilder():
     artist: str
     year: str
 
-    def __init__(self, album: str = '', album_artist: str = '', year: str = ''):
+    def __init__(self, album: str = '',
+                 album_artist: str = '', year: str = ''):
         self.album = album
         self.artist = album_artist
         self.year = year
@@ -153,11 +155,13 @@ class SpApi():
         return SpAlbum(self.client.album(id))
 
     def query_album_by_title(self, title: str) -> SpQueryRespWrapper:
-        q = SpQueryBuilder(album=title)
+        q = SpQueryBuilder(album=title).build()
         return self.execute_query(q)
 
-    def query_album_by_title_and_artist(self, title: str, artist: str) -> SpQueryRespWrapper:
-        q = SpQueryBuilder(album=title, album_artist=artist)
+    def query_album_by_title_and_artist(self,
+                                        title: str,
+                                        artist: str) -> SpQueryRespWrapper:
+        q = SpQueryBuilder(album=title, album_artist=artist).build()
         return self.execute_query(q)
 
     def execute_query(self, q: str) -> SpQueryRespWrapper:

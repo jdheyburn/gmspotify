@@ -5,7 +5,7 @@ import argparse
 import pprint
 import re
 import utils
-from typing import List, MutableMapping, Mapping
+from typing import List, MutableMapping
 import munch
 
 
@@ -58,7 +58,8 @@ def titles_match(gm_title: str, s_title: str) -> bool:
     return stripped_gm_title == stripped_s_title
 
 
-def _tracks_match(gm_track: gmusic.GMusicTrack, sp_track: spotify.SpAlbumTrack):
+def _tracks_match(gm_track: gmusic.GMusicTrack,
+                  sp_track: spotify.SpAlbumTrack):
     # TODO implement - below is draft code
     # gm_artists = [utils.strip_str(gm_track['artist'])]
 
@@ -82,7 +83,8 @@ def _tracks_match(gm_track: gmusic.GMusicTrack, sp_track: spotify.SpAlbumTrack):
     return False
 
 
-def _option1(gm_track: gmusic.GMusicTrack, sp_tracks:List[spotify.SpAlbumTrack]):
+def _option1(gm_track: gmusic.GMusicTrack,
+             sp_tracks: List[spotify.SpAlbumTrack]):
     # TODO implement
     #   1. Look up sp_track by disc and track num and determine if they match
     #       - if not then perform a lookup by other means
@@ -90,31 +92,33 @@ def _option1(gm_track: gmusic.GMusicTrack, sp_tracks:List[spotify.SpAlbumTrack])
     # Get the sp_track for disc and track num
 
     corresponding_sp_track = [sp_track for sp_track in sp_tracks
-                            if sp_track.disc_num == gm_track.disc_num and \
-                                sp_track.track_num == gm_track.track_num]
+                              if sp_track.disc_number == gm_track.disc_num and
+                              sp_track.track_number == gm_track.track_num]
 
     if len(corresponding_sp_track) != 1:
-        # TODO handle when no track found 
+        # TODO handle when no track found
         # TODO handle multiple tracks found
         sp_track = do_stuff_to_get_sp_track()
     else:
         sp_track = corresponding_sp_track[0]
 
     if _tracks_match(gm_track, sp_track):
-
-
+        pass
     return False
 
-def _option2(gm_track: gmusic.GMusicTrack, sp_tracks:List[spotify.SpAlbumTrack]):
+
+def _option2(gm_track: gmusic.GMusicTrack,
+             sp_tracks: List[spotify.SpAlbumTrack]):
     # TODO implement
     #   2. Loop through all the sp_tracks and do a lookup on several factors
     #       - track_num/disc_num/title/artists/etc
-    
+
     return False
 
 
-def _match_tracks(gm_tracks: MutableMapping[int, MutableMapping[int, gmusic.GMusicTrack]],
-                  sp_tracks: List[spotify.SpAlbumTrack]):
+def _match_tracks(
+        gm_tracks: MutableMapping[int, MutableMapping[int, gmusic.GMusicTrack]],
+        sp_tracks: List[spotify.SpAlbumTrack]):
     sp_tracks_added = []
     gm_tracks_added = []
     # TODO fix these ugly for loops
@@ -132,7 +136,8 @@ def _match_tracks(gm_tracks: MutableMapping[int, MutableMapping[int, gmusic.GMus
             gm_track.set_spotify_id(sp_track.id)
             sp_tracks_added.append(sp_track.id)
 
-    no_matches = [gm_track for gm_track in gm_tracks if not gm_track.spotify_id]
+    no_matches = [
+        gm_track for gm_track in gm_tracks if not gm_track.spotify_id]
     if no_matches:
         print('Some tracks could not be matched in spotify:')
         pprint.pprint(no_matches)
@@ -140,7 +145,8 @@ def _match_tracks(gm_tracks: MutableMapping[int, MutableMapping[int, gmusic.GMus
         print('All tracks were matched successfully')
 
 
-def _process_album(sp_api, gm_album: gmusic.GMusicAlbum, sp_album: spotify.SpQueryAlbum):
+def _process_album(sp_api, gm_album: gmusic.GMusicAlbum,
+                   sp_album: spotify.SpQueryAlbum):
     gm_album.set_spotify_id(sp_album.id)
 
     if len(gm_album.total_tracks()) == sp_album.total_tracks:
@@ -158,7 +164,8 @@ def _process_album(sp_api, gm_album: gmusic.GMusicAlbum, sp_album: spotify.SpQue
 
 
 # TODO tidy up this function
-def query_gm_album_in_spotify(sp_api: spotify.SpApi, gm_album: gmusic.GMusicAlbum):
+def query_gm_album_in_spotify(sp_api: spotify.SpApi,
+                              gm_album: gmusic.GMusicAlbum):
     q_text = f'{gm_album.title} - {gm_album.album_artist} - {gm_album.year}'
     print(f'Processing {q_text}')
 
