@@ -21,8 +21,8 @@ def get_gm_track_artists(gm_track: gmusic.GMusicTrack) -> List[str]:
     return sorted(artists)
 
 
-def get_s_track_artists(s_track: munch.Munch) -> List[str]:
-    return sorted([artist.name for artist in s_track.artists])
+def get_sp_track_artists(sp_track: spotify.SpAlbumTrack) -> List[str]:
+    return sorted([artist.name for artist in sp_track.artists])
 
 
 # def _get_all_artists_from_tracks(gm_track: gmusic.GMusicTrack,
@@ -52,19 +52,38 @@ def get_s_track_artists(s_track: munch.Munch) -> List[str]:
 #     }
 
 
-def titles_match(gm_title: str, s_title: str) -> bool:
+def titles_match(gm_title: str, sp_title: str) -> bool:
     stripped_gm_title, _ = utils.strip_ft_artist_from_title(gm_title)
-    stripped_s_title, _ = utils.strip_ft_artist_from_title(s_title)
-    return stripped_gm_title == stripped_s_title
+    stripped_sp_title, _ = utils.strip_ft_artist_from_title(sp_title)
+    stripped_gm_title = utils.strip_str(stripped_gm_title)
+    stripped_sp_title = utils.strip_str(stripped_sp_title)
+    print(f'Comparing gm_title "{stripped_gm_title}" to "{stripped_sp_title}"')
+    return stripped_gm_title == stripped_sp_title
 
 
 def _tracks_match(gm_track: gmusic.GMusicTrack,
                   sp_track: spotify.SpAlbumTrack):
     # TODO implement - below is draft code
-    # gm_artists = [utils.strip_str(gm_track['artist'])]
 
-    # if len(s_track['artists']) > 1:
-    #     print('s_track {} has more than one artist! {}'.format(
+    sp_artists = get_sp_track_artists(sp_track)
+    gm_artists = get_gm_track_artists(gm_track)
+
+    print(f'Comparing GM_Track {gm_track.title} - {gm_track.artist} to SP_track {sp_track.title} - {sp_artists}')
+
+    if not titles_match(gm_track.title, sp_track.title):
+        print(f'Titles do not match - "{gm_track.title}" - "{sp_track.title}"')
+        return False
+    
+    print(f'Titles do match - "{gm_track.title}" - "{sp_track.title}"')
+
+    if len(sp_artists) > 1:
+        print('sp_track has more than one artist')
+
+
+
+
+    # if len(sp_track.artists) > 1:
+    #     print(f'sp_track {} has more than one artist! {}'.format(
     #         gm_track['title'], [x['name'] for x in s_track['artists']]))
     #     gm_title, ft_artists = utils.strip_ft_artist_from_title(
     #         gm_track['title'])
@@ -84,7 +103,9 @@ def _tracks_match(gm_track: gmusic.GMusicTrack,
 
 
 def _option1(gm_track: gmusic.GMusicTrack,
-             sp_tracks: List[spotify.SpAlbumTrack]):
+             sp_tracks: List[spotify.SpAlbumTrack],
+             gm_disc_num: int,
+             gm_track_num: int):
     # TODO implement
     #   1. Look up sp_track by disc and track num and determine if they match
     #       - if not then perform a lookup by other means
@@ -92,8 +113,8 @@ def _option1(gm_track: gmusic.GMusicTrack,
     # Get the sp_track for disc and track num
 
     corresponding_sp_track = [sp_track for sp_track in sp_tracks
-                              if sp_track.disc_number == gm_track.disc_num and
-                              sp_track.track_number == gm_track.track_num]
+                              if sp_track.disc_number == gm_disc_num and
+                              sp_track.track_number == gm_track_num]
 
     if len(corresponding_sp_track) != 1:
         # TODO handle when no track found
@@ -131,7 +152,7 @@ def _match_tracks(
             #   2. Loop through all the sp_tracks and do a lookup on several factors
             #       - track_num/disc_num/title/artists/etc
             # TODO implement both and time them
-            sp_track = _option1(gm_track, sp_tracks)
+            sp_track = _option1(gm_track, sp_tracks, disc_num, track_num)
             sp_track = _option2(gm_track, sp_tracks)
             gm_track.set_spotify_id(sp_track.id)
             sp_tracks_added.append(sp_track.id)
@@ -149,7 +170,7 @@ def _process_album(sp_api, gm_album: gmusic.GMusicAlbum,
                    sp_album: spotify.SpQueryAlbum):
     gm_album.set_spotify_id(sp_album.id)
 
-    if len(gm_album.total_tracks()) == sp_album.total_tracks:
+    if gm_album.total_tracks() == sp_album.total_tracks:
         print('    Complete album added')
         gm_album.set_whole_album_added(True)
     else:

@@ -6,6 +6,20 @@ import spotify
 import gmusic
 import munch
 from unittest.mock import MagicMock
+from test_helpers import construct_sp_track
+
+
+sp_track_1 = construct_sp_track(
+    ['Ezra Collective', 'Loyle Carner'],
+    1,
+    'Stretch Deep - feat. Eve Essex',
+    12
+)
+
+gm_track_1 = gmusic.GMusicTrack(
+    title='Stretch Deep (feat. Eve Essex)',
+    artist='James K'
+)
 
 
 class TestGetSTrackArtists(unittest.TestCase):
@@ -15,10 +29,10 @@ class TestGetSTrackArtists(unittest.TestCase):
         Given a s_track record with multiple artists
         Should return a list of those artists
         """
-        s_track = munch.munchify({'artists': [{'external_urls': {'spotify': 'https://open.spotify.com/artist/25BObiRSDCMwVrBGIVaLIf'}, 'href': 'https://api.spotify.com/v1/artists/25BObiRSDCMwVrBGIVaLIf', 'id': '25BObiRSDCMwVrBGIVaLIf', 'name': 'James K', 'type': 'artist', 'uri': 'spotify:artist:25BObiRSDCMwVrBGIVaLIf'}, {'external_urls': {'spotify': 'https://open.spotify.com/artist/1g80vffuPrdapR6S4WyxN3'}, 'href': 'https://api.spotify.com/v1/artists/1g80vffuPrdapR6S4WyxN3', 'id': '1g80vffuPrdapR6S4WyxN3', 'name': 'Eve Essex', 'type': 'artist', 'uri': 'spotify:artist:1g80vffuPrdapR6S4WyxN3'}], 'available_markets': ['AD', 'AE', 'AR', 'AT', 'AU', 'BE', 'BG', 'BH', 'BO', 'BR', 'CA', 'CH', 'CL', 'CO', 'CR', 'CY', 'CZ', 'DE', 'DK', 'DO', 'DZ', 'EC', 'EE', 'EG', 'ES', 'FI', 'FR', 'GB', 'GR', 'GT', 'HK', 'HN',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               'HU', 'ID', 'IE', 'IL', 'IN', 'IS', 'IT', 'JO', 'JP', 'KW', 'LB', 'LI', 'LT', 'LU', 'LV', 'MA', 'MC', 'MT', 'MX', 'MY', 'NI', 'NL', 'NO', 'NZ', 'OM', 'PA', 'PE', 'PH', 'PL', 'PS', 'PT', 'PY', 'QA', 'RO', 'SA', 'SE', 'SG', 'SK', 'SV', 'TH', 'TN', 'TR', 'TW', 'US', 'UY', 'VN', 'ZA'], 'disc_number': 1, 'duration_ms': 260446, 'explicit': False, 'external_urls': {'spotify': 'https://open.spotify.com/track/1mh4GpKKrmlaUkVzoNqhRt'}, 'href': 'https://api.spotify.com/v1/tracks/1mh4GpKKrmlaUkVzoNqhRt', 'id': '1mh4GpKKrmlaUkVzoNqhRt', 'is_local': False, 'name': 'Stretch Deep - feat. Eve Essex', 'preview_url': 'https://p.scdn.co/mp3-preview/ebb7e70b97a5d29e05044a1f920d1fc594f92b26?cid=ea3ef49a097b42d682d3c7bc98832d65', 'track_number': 12, 'type': 'track', 'uri': 'spotify:track:1mh4GpKKrmlaUkVzoNqhRt'})
+        sp_track = spotify.SpAlbumTrack(munch.munchify({'artists': [{'external_urls': {'spotify': 'https://open.spotify.com/artist/25BObiRSDCMwVrBGIVaLIf'}, 'href': 'https://api.spotify.com/v1/artists/25BObiRSDCMwVrBGIVaLIf', 'id': '25BObiRSDCMwVrBGIVaLIf', 'name': 'James K', 'type': 'artist', 'uri': 'spotify:artist:25BObiRSDCMwVrBGIVaLIf'}, {'external_urls': {'spotify': 'https://open.spotify.com/artist/1g80vffuPrdapR6S4WyxN3'}, 'href': 'https://api.spotify.com/v1/artists/1g80vffuPrdapR6S4WyxN3', 'id': '1g80vffuPrdapR6S4WyxN3', 'name': 'Eve Essex', 'type': 'artist', 'uri': 'spotify:artist:1g80vffuPrdapR6S4WyxN3'}], 'available_markets': ['AD', 'AE', 'AR', 'AT', 'AU', 'BE', 'BG', 'BH', 'BO', 'BR', 'CA', 'CH', 'CL', 'CO', 'CR', 'CY', 'CZ', 'DE', 'DK', 'DO', 'DZ', 'EC', 'EE', 'EG', 'ES', 'FI', 'FR', 'GB', 'GR', 'GT', 'HK', 'HN',
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     'HU', 'ID', 'IE', 'IL', 'IN', 'IS', 'IT', 'JO', 'JP', 'KW', 'LB', 'LI', 'LT', 'LU', 'LV', 'MA', 'MC', 'MT', 'MX', 'MY', 'NI', 'NL', 'NO', 'NZ', 'OM', 'PA', 'PE', 'PH', 'PL', 'PS', 'PT', 'PY', 'QA', 'RO', 'SA', 'SE', 'SG', 'SK', 'SV', 'TH', 'TN', 'TR', 'TW', 'US', 'UY', 'VN', 'ZA'], 'disc_number': 1, 'duration_ms': 260446, 'explicit': False, 'external_urls': {'spotify': 'https://open.spotify.com/track/1mh4GpKKrmlaUkVzoNqhRt'}, 'href': 'https://api.spotify.com/v1/tracks/1mh4GpKKrmlaUkVzoNqhRt', 'id': '1mh4GpKKrmlaUkVzoNqhRt', 'is_local': False, 'name': 'Stretch Deep - feat. Eve Essex', 'preview_url': 'https://p.scdn.co/mp3-preview/ebb7e70b97a5d29e05044a1f920d1fc594f92b26?cid=ea3ef49a097b42d682d3c7bc98832d65', 'track_number': 12, 'type': 'track', 'uri': 'spotify:track:1mh4GpKKrmlaUkVzoNqhRt'}))
         expected = ['Eve Essex', 'James K']
-        actual = gmspotify.get_s_track_artists(s_track)
+        actual = gmspotify.get_sp_track_artists(sp_track)
         self.assertEqual(actual, expected)
 
 
@@ -82,6 +96,10 @@ class TestMatchingLogic(unittest.TestCase):
         s_title = 'Stretch Deep - feat. Eve Essex'
         self.assertTrue(gmspotify.titles_match(gm_title, s_title))
 
+    def test_tracks_match_1(self):
+        gm_track = gmusic.GMusicTrack(
+            title='Zhao Hua', artist='HVAD & Pan Daijing')
+
 
 class TestQueryingLogic(unittest.TestCase):
 
@@ -100,14 +118,14 @@ class TestQueryingLogic(unittest.TestCase):
             year='2017',
             tracks={
                 1: {
-                1: gmusic.GMusicTrack(title='Grafts', artist='Kara-Lis Coverdale')
+                    1: gmusic.GMusicTrack(title='Grafts', artist='Kara-Lis Coverdale')
                 }
             }
         )
 
         gmspotify.query_gm_album_in_spotify(sp_api=sp_api, gm_album=gm_album)
-        sp_api.client.search.assert_called_once_with(q='album:Grafts artist:Kara-Lis Coverdale year:2017', type='album')
-
+        sp_api.client.search.assert_called_once_with(
+            q='album:Grafts artist:Kara-Lis Coverdale year:2017', type='album')
 
 
 if __name__ == '__main__':
