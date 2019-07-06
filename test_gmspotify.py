@@ -10,7 +10,7 @@ from test_helpers import construct_sp_track
 
 
 sp_track_1 = construct_sp_track(
-    ['Ezra Collective', 'Loyle Carner'],
+    ['James K', 'Eve Essex'],
     1,
     'Stretch Deep - feat. Eve Essex',
     12
@@ -19,6 +19,18 @@ sp_track_1 = construct_sp_track(
 gm_track_1 = gmusic.GMusicTrack(
     title='Stretch Deep (feat. Eve Essex)',
     artist='James K'
+)
+
+sp_track_2 = construct_sp_track(
+    ['HVAD', 'Pan Daijing'],
+    1,
+    'Zhao Hua',
+    16
+)
+
+gm_track_2 = gmusic.GMusicTrack(
+    title='Zhao Hua',
+    artist='HVAD & Pan Daijing'
 )
 
 
@@ -84,8 +96,8 @@ class TestMatchingLogic(unittest.TestCase):
         Should return false
         """
         gm_title = 'Zhao Hua'
-        s_title = 'MMXXX (ft Moor Mother)'
-        self.assertFalse(gmspotify.titles_match(gm_title, s_title))
+        sp_title = 'MMXXX (ft Moor Mother)'
+        self.assertFalse(gmspotify.titles_match(gm_title, sp_title))
 
     def test_titles_match_diff_ft_styles(self):
         """
@@ -93,12 +105,42 @@ class TestMatchingLogic(unittest.TestCase):
         Should return false
         """
         gm_title = 'Stretch Deep (feat. Eve Essex)'
-        s_title = 'Stretch Deep - feat. Eve Essex'
-        self.assertTrue(gmspotify.titles_match(gm_title, s_title))
+        sp_title = 'Stretch Deep - feat. Eve Essex'
+        self.assertTrue(gmspotify.titles_match(gm_title, sp_title))
+
+    def test_artists_match_diff_styles(self):
+        """
+        Given one artist with same names with a period in Sp and not in GM
+        Should return true
+        """
+        gm_artists = ['Walter Bishop Jr.']
+        sp_artists = ['Walter Bishop Jr']
+        self.assertTrue(gmspotify.artists_match(gm_artists, sp_artists))
 
     def test_tracks_match_1(self):
-        gm_track = gmusic.GMusicTrack(
-            title='Zhao Hua', artist='HVAD & Pan Daijing')
+        self.assertTrue(gmspotify._tracks_match(gm_track_1, sp_track_1))
+
+    def test_tracks_match_2(self):
+        self.assertTrue(gmspotify._tracks_match(gm_track_2, sp_track_2))
+
+    def test_bonus_disc_no_bonus(self):
+        """
+        Given the same discs are present on both GM and SP
+        Should return false
+        """
+        gm_discs = set([1, 2])
+        sp_discs = set([1, 2])
+        self.assertFalse(gmspotify._bonus_disc_added(gm_discs, sp_discs))
+
+    def test_bonus_disc_added(self):
+        """
+        Given the same discs are present on both GM and SP
+        Should return false
+        """
+        gm_discs = set([1])
+        sp_discs = set([1, 2])
+        self.assertTrue(gmspotify._bonus_disc_added(gm_discs, sp_discs))
+
 
 
 class TestQueryingLogic(unittest.TestCase):

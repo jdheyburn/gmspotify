@@ -19,6 +19,6 @@ def construct_sp_track(artists: List[str],
         'artists': sp_artists,
         'disc_number': disc_num,
         'track_number': track_num,
-        'title': title
+        'name': title
     })
     return spotify.SpAlbumTrack(obj)

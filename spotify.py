@@ -1,5 +1,6 @@
-from typing import List
+from typing import List, Set
 
+import jsonpickle
 import munch
 import spotipy
 import spotipy.util as util
@@ -24,6 +25,9 @@ class SpArtist():
             return NotImplemented
         return self.__dict__ == other.__dict__
 
+    def __str__(self):
+        return jsonpickle.encode(self)
+
 
 class SpAlbumTrack():
     artists: List[SpArtist]
@@ -44,6 +48,9 @@ class SpAlbumTrack():
             return NotImplemented
         return self.__dict__ == other.__dict__
 
+    def __str__(self):
+        return jsonpickle.encode(self)
+
 
 class SpAlbum():
     id: str
@@ -54,6 +61,7 @@ class SpAlbum():
     album_type: str
     release_date: str  # TODO convert to date obj?
     total_tracks: int
+    disc_count: Set[int]
 
     def __init__(self, obj: dict) -> None:
         munched_obj = munch.munchify(obj)
@@ -66,11 +74,15 @@ class SpAlbum():
         self.album_type = munched_obj.album_type
         self.release_date = munched_obj.release_date
         self.total_tracks = munched_obj.total_tracks
+        self.disc_count = set([track.disc_number for track in self.tracks])
 
     def __eq__(self, other):
         if type(other) != type(self):
             return NotImplemented
         return self.__dict__ == other.__dict__
+
+    def __str__(self):
+        return jsonpickle.encode(self)
 
 
 class SpQueryAlbum():
@@ -94,6 +106,9 @@ class SpQueryAlbum():
             return NotImplemented
         return self.__dict__ == other.__dict__
 
+    def __str__(self):
+        return jsonpickle.encode(self)
+
 
 class SpQueryAlbumsResp():
     total: int
@@ -109,6 +124,9 @@ class SpQueryAlbumsResp():
             return NotImplemented
         return self.__dict__ == other.__dict__
 
+    def __str__(self):
+        return jsonpickle.encode(self)
+
 
 class SpQueryRespWrapper():
     albums: SpQueryAlbumsResp
@@ -120,6 +138,10 @@ class SpQueryRespWrapper():
         if type(other) != type(self):
             return NotImplemented
         return self.__dict__ == other.__dict__
+
+    def __str__(self):
+        return jsonpickle.encode(self)
+        
 
 
 class SpQueryBuilder():
@@ -139,6 +161,9 @@ class SpQueryBuilder():
             if val:
                 built_query += f'{key}:{val} '
         return built_query.strip()
+
+    def __str__(self):
+        return jsonpickle.encode(self)
 
 
 class SpApi():

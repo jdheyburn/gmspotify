@@ -1,6 +1,8 @@
-from typing import MutableMapping, List
+import logging
+from typing import List, MutableMapping, AbstractSet
 
 from gmusicapi import Mobileclient
+import jsonpickle
 
 import config
 
@@ -31,6 +33,9 @@ class GMusicTrack:
 
     def __hash__(self):
         return hash((self.title, self.artist))
+
+    def __str__(self):
+        return jsonpickle.encode(self)
 
 
 class GMusicAlbum:
@@ -74,6 +79,10 @@ class GMusicAlbum:
     def total_tracks(self) -> int:
         return sum(len(disc_tracks) for disc_tracks in self.tracks.values())
 
+    def discs_added(self) -> AbstractSet[int]:
+        return self.tracks.keys()
+
+
     def __eq__(self, other):
         if type(other) is not type(self):
             return NotImplemented
@@ -81,6 +90,9 @@ class GMusicAlbum:
 
     def __hash__(self):
         return hash(self.id)
+
+    def __str__(self):
+        return jsonpickle.encode(self)
 
 
 def parse_lib(lib: List) -> MutableMapping[str, GMusicAlbum]:
@@ -100,7 +112,7 @@ def parse_lib(lib: List) -> MutableMapping[str, GMusicAlbum]:
 
         try:
             album.add_track(
-                track['disc_number'],
+                track['discNumber'],
                 track['trackNumber'], GMusicTrack(
                     track['title'],
                     track['artist'],
@@ -126,7 +138,7 @@ def filter_thumbs_up_tracks(lib):
 def get_gm_api():
     api = Mobileclient()
     if not api.oauth_login(config.get_gpm_device_id()):
-        res = api.perform_oauth()
+        api.perform_oauth()
         if not api.oauth_login(config.get_gpm_device_id()):
             raise ValueError("Could not authenticate")
     return api
@@ -145,8 +157,8 @@ def gen_report(lib):
     td_tracks = filter_thumbs_down_tracks(lib)
     uploaded_tracks = filter_uploaded_tracks(lib)
     added_tracks = filter_added_tracks(lib)
-    print('Total : {}'.format(len(lib)))
-    print('Thumbs up: {}'.format(len(tu_tracks)))
-    print('Thumbs down: {}'.format(len(td_tracks)))
-    print('Uploaded: {}'.format(len(uploaded_tracks)))
-    print('Added: {}'.format(len(added_tracks)))
+    logging.info('Total : {}'.format(len(lib)))
+    logging.info('Thumbs up: {}'.format(len(tu_tracks)))
+    logging.info('Thumbs down: {}'.format(len(td_tracks)))
+    logging.info('Uploaded: {}'.format(len(uploaded_tracks)))
+    logging.info('Added: {}'.format(len(added_tracks)))

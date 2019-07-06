@@ -19,7 +19,7 @@ class TestUtils(unittest.TestCase):
         Should return the title as is with no featuring artists
         """
         title = 'Defeat'
-        expected = (title, None)
+        expected = (title, '')
         actual = utils.strip_ft_artist_from_title(title)
         self.assertEqual(actual, expected)
 
@@ -27,9 +27,12 @@ class TestUtils(unittest.TestCase):
         """
         Given featuring one Artist in brackets, should return stripped title and that one artist
         """
-        title = 'Jim Jones At Botany Bay (From "The Hateful Eight" Soundtrack) (feat. Kurt Russell)'
+        title = 'Jim Jones At Botany Bay (From "The Hateful Eight" Soundtrack)\
+             (feat. Kurt Russell)'
         expected = (
-            'Jim Jones At Botany Bay (From "The Hateful Eight" Soundtrack)', 'Kurt Russell')
+            'Jim Jones At Botany Bay (From "The Hateful Eight" Soundtrack)',
+            'Kurt Russell'
+        )
         actual = utils.strip_ft_artist_from_title(title)
         self.assertEqual(actual, expected)
 
@@ -51,7 +54,7 @@ class TestUtils(unittest.TestCase):
         expected = ('WYWD (Remix)', 'Kelela')
         actual = utils.strip_ft_artist_from_title(title)
         self.assertEqual(actual, expected)
-    
+
     def test_strip_ft_artist_one_ft_no_dot(self):
         """
         Given featuring one Artist in brackets with no dot
@@ -61,7 +64,7 @@ class TestUtils(unittest.TestCase):
         expected = ('MMXXX', 'Moor Mother')
         actual = utils.strip_ft_artist_from_title(title)
         self.assertEqual(actual, expected)
-    
+
     def test_strip_ft_artist_one_ft_hyphen(self):
         """
         Given featuring one Artist seperated by a hyphen instead of brackets
@@ -71,7 +74,6 @@ class TestUtils(unittest.TestCase):
         expected = ('Stretch Deep', 'Eve Essex')
         actual = utils.strip_ft_artist_from_title(title)
         self.assertEqual(actual, expected)
-        
 
 
 if __name__ == '__main__':

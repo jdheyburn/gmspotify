@@ -15,4 +15,7 @@
 
 # parse_lib - test for the same song appearing twice (could be one uploaded and one added)
 
-# Handle when a whole album had been added on GM, but Spotify has additional tracks (e.g. Hot Chip A Bath Full of Ecstasy has bonus tracks on Spotify but not GM)
+# Handle when a whole album had been added on GM, but Spotify has additional tracks 
+#   - e.g. Hot Chip A Bath Full of Ecstasy has bonus tracks on Spotify but not GM)
+#   - MAribou State Kingdom album too
+# This has been implemented, but needs tests on the albums themselves instead of the lower level logic

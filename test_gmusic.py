@@ -129,6 +129,19 @@ class TestClasses(unittest.TestCase):
         actual = album.total_tracks()
         self.assertEqual(actual, expected)
 
+    def test_discs_added(self):
+        """
+        Given tracks have been added to tracks across 2 discs
+        Should return the correct number of discs
+        """
+        album = GMusicAlbum(id, title, album_artist)
+        album.add_track(1, 3, track)
+        album.add_track(1, 2, track)
+        album.add_track(2, 1, track)
+        expected = set([1,2])
+        actual = album.discs_added()
+        self.assertEqual(actual, expected)
+
 
 # class TestOther(unittest.TestCase):
     # TODO way of testing this properly using equality?
